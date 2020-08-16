@@ -85,7 +85,7 @@ void c_p_p(){
     freopen("output.txt", "w", stdout);
     #endif
 }
-void solve(){
+void solve(int t){
     ll n;
     // cin>>n;
 }
@@ -94,8 +94,8 @@ int main(){
     // memset(prime, true, sizeof(prime));
     // sieve();
     IO
-    ll t = 1;
+    int t = 1;
     // cin>>t;
-    while(t--) solve();
+    fin(i, 1, t) solve(i);
     return 0;
 }
