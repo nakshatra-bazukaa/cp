@@ -81,12 +81,12 @@ void printPrimeFactors(ll n){
 }
 void c_p_p(){
     #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("i.txt", "r", stdin);
+    freopen("o.txt", "w", stdout);
     #endif
 }
 void solve(int t){
-    ll n;
+    int n;
     // cin>>n;
 }
 int main(){
