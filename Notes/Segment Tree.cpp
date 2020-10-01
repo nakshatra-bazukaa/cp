@@ -18,18 +18,18 @@ void buildSegmentTree(int *arr, int *tree, int start, int end, int treeNode){
 }
 
 void updateTree(int *arr, int *tree, int start, int end, int treeNode, int index, int value){
-	id(start == end){
-		arr[idx] = value;
+	if(start == end){
+		arr[index] = value;
 		tree[treeNode] = value;
 		return;
 	}
 
 	int mid = (start+end)/2;
 	
-	if(idx > mid)
-		updateTree(arr, tree, mid+1, end, 2*treeNode+1, idx, value);
+	if(index > mid)
+		updateTree(arr, tree, mid+1, end, 2*treeNode+1, index, value);
 	else
-		updateTree(arr, tree, start, mid, 2*treeNode, idx, value);
+		updateTree(arr, tree, start, mid, 2*treeNode, index, value);
 	
 	tree[treeNode] = tree[2*treeNode] + tree[2*treeNode+1];
 }
@@ -44,7 +44,7 @@ int query(int *tree, int start, int end, int treeNode, int left, int right){
 	if(start>=left && end<=right){
 		return tree[treeNode];
 	}
-	// Partially inside and partiallt outside 
+	// Partially inside and partially outside 
 	int mid = (start+end)/2;
 	int ans1 = query(tree, start, mid, 2*treeNode, left, right);
 	int ans2 = query(tree, mid+1, end, 2*treeNode+1, left, right);
