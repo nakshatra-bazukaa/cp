@@ -1,0 +1,1 @@
+This repository will contain the implementation of some standard problems of data structures and algorithms.The solution will be implemented in C++.This repository also contains some notes and basic template for competitive programming.
