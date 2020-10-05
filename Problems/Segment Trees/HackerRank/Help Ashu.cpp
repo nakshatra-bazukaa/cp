@@ -83,9 +83,98 @@ void c_p_p(){
     freopen("o.txt", "w", stdout);
     #endif
 }
+class Node{
+    public:
+    int oddCount, evenCount;
+    Node(){
+        oddCount = 0;
+        evenCount = 0;
+    }
+};
+void buildTree(int *arr, Node *tree, int start, int end, int currNode){
+    if(start == end){
+        if(arr[start]%2 == 0)
+            tree[currNode].evenCount++;
+        else
+            tree[currNode].oddCount++;
+        return;
+    }
+
+    int mid = (start+end)/2;
+
+    buildTree(arr, tree, start, mid, 2*currNode);
+    buildTree(arr, tree, mid+1, end, 2*currNode+1);
+
+    tree[currNode].evenCount = tree[2*currNode].evenCount + tree[2*currNode+1].evenCount;
+    tree[currNode].oddCount = tree[2*currNode].oddCount + tree[2*currNode+1].oddCount;
+}
+void updateTree(int* arr, Node *tree, int start, int end, int currNode, int index, int val){
+    if(start == end){
+        if(arr[index]%2 == 0){
+            if(val%2 != 0){
+                tree[currNode].oddCount++;
+                tree[currNode].evenCount--;
+            }
+        }
+        else{
+            if(val%2 == 0){
+                tree[currNode].oddCount--;
+                tree[currNode].evenCount++;
+            }
+        }
+        arr[index] = val;
+        return;
+    }
+
+    int mid = (start+end)/2;
+
+    if(index <= mid)
+        updateTree(arr, tree, start, mid, 2*currNode, index, val);
+    else
+        updateTree(arr, tree, mid+1, end, 2*currNode+1, index, val);
+
+    tree[currNode].evenCount = tree[2*currNode].evenCount + tree[2*currNode+1].evenCount;
+    tree[currNode].oddCount = tree[2*currNode].oddCount + tree[2*currNode+1].oddCount;
+}
+int query(Node *tree, int start, int end, int currNode, int left, int right, int type){
+    // Completly outside given range
+	if(start>right || end<left)
+		return 0;
+
+	// Completly inside given range 
+	if(start>=left && end<=right){
+        if(type == 1)
+		    return tree[currNode].evenCount;
+        else
+            return tree[currNode].oddCount;
+	}
+	// Partially inside and partially outside 
+	int mid = (start+end)/2;
+
+	int ans1 = query(tree, start, mid, 2*currNode, left, right, type);
+	int ans2 = query(tree, mid+1, end, 2*currNode+1, left, right, type);
+
+	return ans1+ans2;
+}
 void solve(int t){
     int n;
-    // cin>>n; 
+    cin>>n; 
+    int *arr = new int[n]();
+    f(i, 0, n) cin>>arr[i];
+    Node *tree = new Node[4*n]();
+    buildTree(arr, tree, 0, n-1, 1);
+    int q;
+    cin>>q;
+    loop(q){
+        int type, x, y;
+        cin>>type>>x>>y;
+        if(type == 0){
+            updateTree(arr, tree, 0, n-1, 1, x-1, y);
+        }
+        else{
+            cout<<query(tree, 0, n-1, 1, x-1, y-1, type)<<endl;
+        }
+    }   
 }
 int main(){
 	// c_p_p();

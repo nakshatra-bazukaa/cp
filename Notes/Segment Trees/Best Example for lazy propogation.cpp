@@ -231,9 +231,6 @@ void solve(int t){
             updateTree(tree, lazy, 0, n-1, st-1, nd-1, 1, x, type);
         }
     }
-
-
-
 }
 int main(){
 	// c_p_p();
