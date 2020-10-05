@@ -64,3 +64,57 @@ int main(){
 	for(int i = 1; i<18; i++)
 		cout<<tree[i];
 }
+
+
+---------------------------------------------------------------------------------------------------------
+Lazy Propagation
+
+void buildTree(int* arr, int* tree, int start, int end, int treeNode){
+	if(start == end){
+		tree[treeNode] = arr[start];
+		return;
+	}
+
+	int mid = (start+end)/2;
+
+	buildTree(arr, tree, start, mid, 2*treeNode);
+	buildTree(arr, tree, mid+1, end, 2*treeNode+1);
+
+	tree[treeNode] = min(tree[2*treeNode], tree[2*treeNode+1]);
+}
+
+void updateSegTreeLazy(int *tree, int *lazy, int start, int end, int left, int right, int currPos, int inc){
+	if(start > end)
+		return;
+	
+	if(lazy[currNode] != 0){
+		tree[currPos] += lazy[currPos];
+
+		if(start != end){
+			lazy[2*currPos] += lazy[currPos];
+			lazt[2*currPos+1] += lazy[currPos];
+		}
+		lazy[currPos] = 0;
+	}
+
+	// No overlap
+	if(left > end || right < start)
+		return;
+	
+	// complete overlap
+	if(left <= start && end <= right){
+		tree[currPos] += inc;
+		if(start != end){
+			lazy[2*currPos] += inc;
+			lazy[2*currPos+1] += inc;
+		}
+		return;
+	}
+
+	// Partial overlap
+	int mid = (start+end)/2;
+	updateSegTreeLazy(tree, lazy, start, mid, left, right, 2*currPos, inc);
+	updateSegTreeLazy(tree, lazy, mid+1, end, left, right, 2*currPos+1, inc);
+	
+	tree[currPos] = min(tree[2*currPos], tree[2*currPos+1]);
+}
