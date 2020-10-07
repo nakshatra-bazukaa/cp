@@ -88,6 +88,11 @@ void c_p_p(){
 class Node{
     public:
     int data, max, smax;
+    Node(){
+        data = -1;
+        max = -1;
+        smax = -1;
+    }
 };
 void buildTree(int *arr, Node *tree, int start, int end, int treeNode){
     if(start == end){
@@ -104,14 +109,19 @@ void buildTree(int *arr, Node *tree, int start, int end, int treeNode){
 
     tree[treeNode].data = tree[2*treeNode].data + tree[2*treeNode+1].data;
 
-    vi maxarr;
-    maxarr.push_back(tree[2*treeNode].max);
-    maxarr.push_back(tree[2*treeNode].smax);
-    maxarr.push_back(tree[2*treeNode+1].max);
-    maxarr.push_back(tree[2*treeNode+1].smax);
-    sort(all(maxarr));
-    tree[treeNode].max = maxarr[3];
-    tree[treeNode].smax = maxarr[2];
+    int v1, v2, v3, v4;
+    v1 = tree[2*treeNode].max;
+    v2 = tree[2*treeNode].smax;
+    v3 = tree[2*treeNode+1].max;
+    v4 = tree[2*treeNode+1].smax;
+    if(v1 > v3){
+        tree[treeNode].max = v1;
+        tree[treeNode].smax = max(v2, v3);
+    }
+    else{
+        tree[treeNode].max = v3;        
+        tree[treeNode].smax = max(v1, v4);
+    }
 }
 void updateTree(int *arr, Node *tree, int start, int end, int treeNode, int index, int value){
 	if(start == end){
@@ -131,35 +141,48 @@ void updateTree(int *arr, Node *tree, int start, int end, int treeNode, int inde
 	
 	tree[treeNode].data = tree[2*treeNode].data + tree[2*treeNode+1].data;
 
-    vi maxarr;
-    maxarr.push_back(tree[2*treeNode].max);
-    maxarr.push_back(tree[2*treeNode].smax);
-    maxarr.push_back(tree[2*treeNode+1].max);
-    maxarr.push_back(tree[2*treeNode+1].smax);
-    sort(all(maxarr));
-    tree[treeNode].max = maxarr[3];
-    tree[treeNode].smax = maxarr[2];
+    int v1, v2, v3, v4;
+    v1 = tree[2*treeNode].max;
+    v2 = tree[2*treeNode].smax;
+    v3 = tree[2*treeNode+1].max;
+    v4 = tree[2*treeNode+1].smax;
+    if(v1 > v3){
+        tree[treeNode].max = v1;
+        tree[treeNode].smax = max(v2, v3);
+    }
+    else{
+        tree[treeNode].max = v3;        
+        tree[treeNode].smax = max(v1, v4);
+    }
 }
-pi maxPairSum(Node *tree, int start, int end, int treeNode, int left, int right){
+Node maxPairSum(Node *tree, int start, int end, int treeNode, int left, int right){
+    Node ans;
     if(start>right || end<left || right<left)
-		return mp(-1, -1);
+		return ans;
     
     if(start>=left && end<=right)
-        return mp(tree[treeNode].max, tree[treeNode].smax);
+        return tree[treeNode];
     
 		
 
     int mid = (start+end)/2;
-	pi ans1 = maxPairSum(tree, start, mid, 2*treeNode, left, right);
-	pi ans2 = maxPairSum(tree, mid+1, end, 2*treeNode+1, left, right);
+	Node ans1 = maxPairSum(tree, start, mid, 2*treeNode, left, right);
+	Node ans2 = maxPairSum(tree, mid+1, end, 2*treeNode+1, left, right);
 
-	vi ansarr;
-    ansarr.push_back(ans1.first);
-    ansarr.push_back(ans1.second);
-    ansarr.push_back(ans2.first);
-    ansarr.push_back(ans2.second);
-    sort(all(ansarr));
-    return mp(ansarr[3], ansarr[2]);
+    int v1, v2, v3, v4;
+    v1 = ans1.max;
+    v2 = ans1.smax;
+    v3 = ans2.max;
+    v4 = ans2.smax;
+    if(v1 > v3){
+        ans.max = v1;
+        ans.smax = max(v2, v3);
+    }
+    else{
+        ans.max = v3;        
+        ans.smax = max(v1, v4);
+    }
+    return ans;
 }
 void solve(int t){
     ll n;
@@ -180,22 +203,17 @@ void solve(int t){
 
     buildTree(arr, tree, 0, n-1, 1);
 
-    // f(i, 0, 4*n){
-        // cout<<tree[i].data<<' '<<tree[i].max<<' '<<tree[i].smax<<"    ";
-    // }
-    // cout<<endl;
-
     loop(q){
         char Q;
         cin>>Q;
         int x, y;
         cin>>x>>y;
         if(Q == 'Q'){
-            pi ans = maxPairSum(tree, 0, n-1, 1, x-1, y-1);
-            if(ans.second == -1)
-                cout<<ans.first<<endl;
+            Node ans = maxPairSum(tree, 0, n-1, 1, x-1, y-1);
+            if(ans.smax == -1)
+                cout<<ans.max<<endl;
             else
-                cout<<(ans.first)+(ans.second)<<endl;
+                cout<<(ans.max)+(ans.smax)<<endl;
         }
         else{
             updateTree(arr, tree, 0, n-1, 1, x-1, y);
@@ -205,7 +223,7 @@ void solve(int t){
 
 }
 int main(){
-	c_p_p();
+	// c_p_p();
     // memset(prime, true, sizeof(prime));
     // sieve();
     IO
