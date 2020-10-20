@@ -122,73 +122,79 @@ ALGORITHMS :-
 		}
 		
 		
-		-2.) Kruskals ALGORITHM: ( To calculate MST of a given graph )
-			- Greegy Algorithm
+	-2.) Kruskals ALGORITHM: ( To calculate MST of a given graph )
+		- Greegy Algorithm
 
-	        -1.) Take input -> O(E) { Unopmitsable }
-	        -2.) Sort input array -> O(E*log(E)) { Unopmitsable }
-	        -3.) Pick n-1 edges and put in MST {*** Optmisable ***}
-	                |
-	                |
-	                --> 1.) Union - find O(E*V)
-	                    2.) Union by rank and path compression ((BEST)) { To be studied }----------------------------------------------------------
+        -1.) Take input -> O(E) { Unopmitsable }
+        -2.) Sort input array -> O(E*log(E)) { Unopmitsable }
+        -3.) Pick n-1 edges and put in MST {*** Optmisable ***}
+                |
+                |
+                --> 1.) Union - find O(E*V)
+                    2.) Union by rank and path compression ((BEST)) { To be studied }----------------------------------------------------------
 
-	        -Complexity is decided by step 3.)
-	        -So optimising step 3.) will do the job
+        -Complexity is decided by step 3.)
+        -So optimising step 3.) will do the job
 
-			CODE:
-				class Edge{
-				public:
-					int source;
-					int dest;
-					int weight;
-				};
-				bool compare(Edge e1, Edge e2){
-					return (e1.weight < e2.weight);
+		CODE:
+			class Edge{
+			public:
+			    int v1, v2, weight;
+			};
+
+			int V, E;
+			Edge *edges, *mst;
+			int *parent;
+
+			int findParent(int v){
+			    return (parent[v] == v) ? v : findParent(parent[v]);
+			}
+			void kruskals(){
+			    int count = 0, i = 0;
+			    while(count != V-1){
+			        Edge currentEdge = edges[i++];
+			        int v1Parent = findParent(currentEdge.v1);
+			        int v2Parent = findParent(currentEdge.v2);
+			        if(v1Parent != v2Parent){
+			            mst[count++] = currentEdge;
+			            parent[v1Parent] = v2Parent;
+			        }
+			    }
+			}
+			bool compare(Edge e1, Edge e2){
+			    return (e1.weight < e2.weight);
+			}
+			int main(){
+			    cin>>V>>E;
+			    
+			    edges = new Edge[E];
+			    mst = new Edge[V-1];
+			    parent = new int[V];
+			    
+			    for(int i = 0; i<V; i++)
+			    	parent[i] = i;
+			    
+			    for(int i = 0; i<E; i++){
+			        int v1, v2, weight;
+			        cin>>v1>>v2>>weight;
+			        edges[i].v1 = v1;
+			        edges[i].v2 = v2;
+			        edges[i].weight = weight; 
+			    }
+			    
+			    sort(edges, edges + E, compare);
+			    
+			    kruskals();
+			    
+			    for(int i = 0; i<V-1; i++){
+			        if(mst[i].v1 < mst[i].v2)
+			            cout<<mst[i].v1<<" "<<mst[i].v2;
+			        else
+			            cout<<mst[i].v2<<" "<<mst[i].v1;
+			        
+			    	cout<<" "<<mst[i].weight<<endl;
 				}
-				int findParent(int v, int *parent){
-					if(parent[v] == v)
-						return v;
-					return findParent(parent[v], parent);
-				}
-				void kruskals(Edge *input, int n, int e){
-					sort(input, input + e, compare);
-					Edge *output = new Edge[n-1];
-					int *parent = new int[n];
-					f(i, 0, n) parent[i] = i;
-					int count = 0;
-					int i = 0;
-					while(count != n-1){
-						Edge currentEdge = input[i++];
-						int sourceParent = findParent(currentEdge.source, parent);
-						int destParent = findParent(currentEdge.dest, parent);
-						if(sourceParent != destParent){
-							output[count++] = currentEdge;
-							parent[sourceParent] = destParent;
-						}
-					}
-					f(i, 0, n-1)
-						if(output[i].source < output[i].dest)
-							cout<<output[i].source<<" "<<output[i].dest<<" "<<output[i].weight<<endl;
-						else
-							cout<<output[i].dest<<" "<<output[i].source<<" "<<output[i].weight<<endl;
-					delete [] output;
-					delete [] parent;
-				}
-				int main(){
-					int n, e;
-					cin>>n>>e;
-					Edge *input = new Edge[e];
-					f(i, 0, e){
-						int s, d, w;
-						cin>>s>>d>>w;
-						input[i].source = s;
-						input[i].dest = d;
-						input[i].weight = w; 
-					}
-					kruskals(input, n, e);
-					delete [] input;
-				}
+			}
 
 		3.) Prims Algorithm: ( To calculate MST of a given graph )
 			- Greegy Algorithm
