@@ -1,4 +1,4 @@
-I.)
+I.) Graphs Terminologies
 
     -1.) Terminologies
 
@@ -32,114 +32,92 @@ I.)
                      O(n) <= O(edge) <= O(n^2)  
 
 
-II.)
+II.) Graphs ALGORITHMS
    
-    -1.) Tree  ->connected
-             |
-              ->does not have any cycle
+                    					-> connected
+    -1.) Tree is a graph which is -----|
+                    					-> does not have any cycle
+
+        -Basically it have n vertices and n-1 edges
 
     -2.) Spanning Tree
-        -Given an undirected and connected graph a tree which contains all the vertices
+        -Given an undirected and connected graph 
+        	a spanning tree is a tree which contains all the vertices in the graph
 
     NOTE :-
         -For a given graph we can have multiple no. of spanning trees
 
     -3.) Min Spanning Tree ( MST )
-        -Given weighted, connected and undirected graph the formed spanning tree must have min. weight
+        -Given weighted, connected and undirected graph 
+        	the formed spanning tree must have 
+        		min. weight
 
 ALGORITHMS :-
 
-	-1.) DFS/BFS :-
+	-1.) BFS/DFS :-
+
+----------------------------------------------------
+		Sample Input:-         
+
+		4 4                    
 		
--printDFS
-void dfs(int sv){
-	cout<<sv<<' ';
-	visited[sv] = true;
-	f(i, 0, V)
-	    if(!visited[i] && edges[sv][i])
-	        	dfs(i);
-	f(i, 0, V)
-		if(!visited[i])
-			dfs(i);
-}
+		0 1
+		0 3
+		1 2
+		2 3
+----------------------------------------------------
 
--printBFS
-void bfs(int sv){
-	queue<int> pendingVertices;
-	pendingVertices.push(sv);
-	visited[sv] = true;
-	while(!pendingVertices.empty()){
-		int currentVertex = pendingVertices.front();
-		pendingVertices.pop();
-		cout<<currentVertex<<' ';
-		f(i, 0, V)
-			if(!visited[i] && edges[currentVertex][i]){
-				pendingVertices.push(i);
-				visited[i] = true;
-			}
-	}
-	f(i, 0, V)
-		if(!visited[i])
-			bfs(i);
-}
+		int V, E;
+		bool *visited;
 
-void addEdge(vpi adj[], int f, int s, int wt){
-	adj[f].eb(mp(s, wt));
-	adj[s].eb(mp(f, wt));
-}
-void addEdge(vi adj[], int f, int s){
-	adj[f].eb(s);
-	adj[s].eb(f);
-}
-int V, E;
-bool **edges, *visited;
-
-int main(){
-
-	cin>>V>>E;
-
-	// Adjacency matrix { Unweighted and undirected }
-	edges = new bool*[V];
-	visited = new bool[V];
-	f(i, 0, V){
-		visited[i] = false;
-		edges[i] = new bool[V];
-		f(j, 0, V)
-			edges[i][j] = false;
-	}
-	loop(E){
-		int f, s;
-		cin>>f>>s;
-		edges[f][s] = true;
-		edges[s][f] = true;
-	}
-
-	// Adjacency List { Unweighted and undirected }
-	vi adj[V];
-	loop(E){
-		int f, s;
-		cin>>f>>s;
-		addEdge(adj, f, s);
-	}
-
-	// Adjacency List { weighted and undirected}
-	vpi adj[V];
-	loop(E){
-		int f, s;
-		cin>>f>>s>>wt;
-		addEdge(adj, f, s, wt);
-	}
-
-	bfs/dfs(0);
-
-	f(i, 0, V)
-		delete [] edges[i];
-	delete [] edges;
-	delete [] visited;
-	return 0;
-}
-
-
+		// Bfs
+		void printBfs(int start, vector<int> adj[]){
+		    queue<int> pendingNodes;
+		    pendingNodes.push(start);
+		    visited[start] = true;
+		    while(!pendingNodes.empty()){
+		        int front = pendingNodes.front();
+		        pendingNodes.pop();
+		        cout<<front<<' ';
+		        for(int i = 0; i<adj[front].size(); i++){
+		            if(!visited[adj[front][i]]){
+		                visited[adj[front][i]] = true;
+		                pendingNodes.push(adj[front][i]);
+		            }
+		        }
+		    }
+		}
+		// Dfs
+		void printDfs(int start, vector<int> adj[]){
+		    cout<<start<<' ';
+		    visited[start] = true;
+		    for(auto i : adj[start])
+		        if(!visited[i])
+		            printDfs(i, adj);
+		}
+		// Main code
+		int main() {
+		    cin >> V >> E;
+			
+			// Adjacency matrix
+		    vector<int> adj[V];
+		    for(int i = 0; i<E; i++){
+		        int x, y;
+		        cin>>x>>y;
+		        adj[x].push_back(y);
+		        adj[y].push_back(x);
+		    }
+		    
+		    visited = new bool[V]();
+		    
+		    for(int i = 0; i<V; i++)
+		    	if(!visited[i])
+		        	printBfs(i, adj); or printDfs(i, adj);    
+		    
+		    delete [] visited;
+		  	return 0;
+		}
+		
 		
 		-2.) Kruskals ALGORITHM: ( To calculate MST of a given graph )
 			- Greegy Algorithm
