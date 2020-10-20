@@ -79,10 +79,10 @@ ALGORITHMS :-
 		        int front = pendingNodes.front();
 		        pendingNodes.pop();
 		        cout<<front<<' ';
-		        for(int i = 0; i<adj[front].size(); i++){
-		            if(!visited[adj[front][i]]){
-		                visited[adj[front][i]] = true;
-		                pendingNodes.push(adj[front][i]);
+		        for(auto i : adj[front]){
+		            if(!visited[i]){
+		                visited[i] = true;
+		                pendingNodes.push(i);
 		            }
 		        }
 		    }
@@ -97,6 +97,7 @@ ALGORITHMS :-
 		}
 		// Main code
 		int main() {
+			// number of vertices and edges
 		    cin >> V >> E;
 			
 			// Adjacency matrix
@@ -108,8 +109,10 @@ ALGORITHMS :-
 		        adj[y].push_back(x);
 		    }
 		    
+		    // Flags for visited nodes
 		    visited = new bool[V]();
 		    
+		    // Inside for loop to handle disconnected graphs
 		    for(int i = 0; i<V; i++)
 		    	if(!visited[i])
 		        	printBfs(i, adj); or printDfs(i, adj);    
