@@ -131,7 +131,7 @@ ALGORITHMS :-
                 |
                 |
                 --> 1.) Union - find O(E*V)
-                    2.) Union by rank and path compression ((BEST)) { To be studied }----------------------------------------------------------
+                    2.) Union by rank and path compression O(E*log(V)) ((BEST)) { To be studied }----------------------------------------------------------
 
         -Complexity is decided by step 3.)
         -So optimising step 3.) will do the job
@@ -200,62 +200,67 @@ ALGORITHMS :-
 			- Greegy Algorithm
 
 			CODE:
-				int findMinVertex(int *weights, bool *visited, int n){
-					int minVertex = -1;
-					f(i, 0, n)
-						if(!visited[i] && (minVertex == -1 || weights[i] < weights[minVertex]))
-							minVertex = i;
-					return minVertex;						
+				int V, E;
+				bool *visited;
+				int *parent;
+				int *weight;
+
+				int findMinVertex(){
+				    int minVertex = -1;
+				    for(int i = 0; i < V; i++)
+				        if(!visited[i] && (minVertex == -1  || weight[i] < weight[minVertex]))
+				            minVertex = i;
+				    return minVertex;
 				}
-				void prims(int **edges, int n){
-					int *parent = new int[n];
-					int *weights = new int[n];
-					bool *visited = new bool[n];
-					f(i, 0, n){
-						visited[i] = false;
-						weights[i] = INT_MAX;
-					}
-					parent[0] = -1;
-					weights[0] = 0;
-					f(i, 0, n-1){
-						int minVertex = findMinVertex(weights, visited, n);
-						visited[minVertex] = true;
-						f(j, 0, n)
-							if(edges[minVertex][j] != 0 && !visited[j] && (edges[minVertex][j] < weights[j])){
-								weights[j] = edges[minVertex][j];
-								parent[j] = minVertex;			
-							}
-					}
-					f(i, 1, n)
-						if(parent[i] < i)
-							cout<<parent[i]<<" "<<i<<" "<<weights[i]<<endl;
-						else
-							cout<<i<<" "<<parent[i]<<" "<<weights[i]<<endl;
-					delete [] parent;
-					delete [] weights;
-					delete [] visited;
+				void prims(vector<pair<int,int>> adj[]){
+				    for(int i = 0; i < V; i++){
+				        int minVertex = findMinVertex();
+				        visited[minVertex] = true;
+				        for(auto j : adj[minVertex])
+				            if(!visited[j.first] && j.second > 0 && weight[j.first] > j.second){
+				                    weight[j.first] = j.second;
+				                    parent[j.first] = minVertex;
+				            }
+				    }
 				}
 				int main(){
-					int n, e;
-					cin>>n>>e;
-					int **edges = new int*[n];
-					f(i, 0, n){
-						edges[i] = new int[n];
-						f(j, 0, n) edges[i][j] = 0;
-					}
-					f(i, 0, e){
-						int f, s, w;
-						cin>>f>>s>>w;
-						edges[f][s] = w;
-						edges[s][f] = w;
-					}
-					prims(edges, n);
-					f(i, 0, n)
-						delete [] edges[i];
-					delete [] edges; 
+				  	cin>>V>>E;
+				    
+				    visited = new bool[V]();
+				    parent = new int[V]();
+				    weight = new int[V]();
+				    
+				    for(int i = 1; i < V; i++)
+				    	weight[i] = INT_MAX;
+				    
+				    vector<pair<int,int>> adj[V];
+				  	for(int i = 0; i<E; i++){
+				    	int v1, v2, w;
+				        cin>>v1>>v2>>w;
+				        adj[v1].push_back(make_pair(v2, w));
+				        adj[v2].push_back(make_pair(v1, w));
+				  	}
+				    
+				  	prims(adj);
+				    
+				    for(int i = 1; i < V; i++){
+				        if(i < parent[i])
+				            cout<<i<<" "<<parent[i];
+				        else
+				            cout<<parent[i]<<" "<<i;
+				        cout<<" "<<weight[i]<<endl;
+				    }
+				    
+				    delete [] visited;
+				    delete [] parent;
+				    delete [] weight;
+
+				  	return 0;
 				}
 
 		4.) Dijkstra
+ 			- Gives shortest path from source to a destination
+ 					-------------	   ------      -----------
 		
 			CODE:
 				int findMinVertex(int *distance, bool *visited, int n){
