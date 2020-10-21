@@ -263,52 +263,52 @@ ALGORITHMS :-
  					-------------	   ------      -----------
 		
 			CODE:
-				int findMinVertex(int *distance, bool *visited, int n){
-					int minVertex = -1;
-					f(i, 0, n)
-						if(!visited[i] && (minVertex == -1 || distance[i] < distance[minVertex]))
-							minVertex = i;
-					return minVertex;						
+				int V, E;
+				bool *visited;
+				int *dist;
+
+				int findMinVertex(){
+				    int minVertex = -1;
+				    for(int i = 0; i<V; i++)
+				        if(!visited[i] && (minVertex == -1 || dist[i] < dist[minVertex]))
+				            minVertex = i;
+				    return minVertex;
 				}
-				void dijkstra(int **edges, int n){
-					int *distance = new int[n];
-					bool *visited = new bool[n];
-					f(i, 0, n){
-						distance[i] = INT_MAX;
-						visited[i] = false;
-					}
-					distance[0] = 0;
-					f(i, 0, n-1){
-						int minVertex = findMinVertex(distance, visited, n);
-						visited[minVertex] = true;
-						f(j, 0, n)
-							if(edges[minVertex][j] != 0 && !visited[j]){
-								int dist = distance[minVertex] + edges[minVertex][j];
-								if(dist < distance[j])
-									distance[j] = dist;
-							}
-					}
-					f(i, 0, n)
-						cout<<i<<" "<<distance[i]<<endl;
-					delete [] visited;
-					delete [] distance;
+				void dijkstras(vector<pair<int,int>> adj[]){
+				    for(int i = 0; i<V; i++){
+				        int minVertex = findMinVertex();
+				        visited[minVertex] = true;
+				        for(auto j : adj[minVertex])
+				            if(!visited[j.first] && j.second > 0){
+				                int totalDist = dist[minVertex] + j.second;
+				                if(dist[j.first] > totalDist)
+				                    dist[j.first] = totalDist;
+				            }
+				    }
 				}
 				int main(){
-					int n, e;
-					cin>>n>>e;
-					int **edges = new int*[n];
-					f(i, 0, n){
-						edges[i] = new int[n];
-						f(j, 0, n) edges[i][j] = 0;
-					}
-					f(i, 0, e){
-						int f, s, w;
-						cin>>f>>s>>w;
-						edges[f][s] = w;
-						edges[s][f] = w;
-					}
-					dijkstra(edges, n);
-					f(i, 0, n)
-						delete [] edges[i];
-					delete [] edges; 
+				  	cin>>V>>E;
+
+				    vector<pair<int,int>> adj[V];
+				    for(int i = 0; i<E; i++){
+				        int v1, v2, w;
+				        cin>>v1>>v2>>w;
+				        adj[v1].push_back(make_pair(v2, w));
+				        adj[v2].push_back(make_pair(v1, w));
+				    }
+				    
+				    visited = new bool[V]();
+				    dist = new int[V]();
+				    for(int i = 1; i<V; i++)
+				        dist[i] = INT_MAX;
+				        
+				    dijkstras(adj);
+				    
+				    for(int i = 0; i<V; i++)
+				        cout<<i<<' '<<dist[i]<<endl;
+					
+				    delete [] visited;
+				    delete [] dist;
+				    
+				  	return 0;
 				}
