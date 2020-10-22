@@ -69,9 +69,10 @@ ALGORITHMS :-
 
 		int V, E;
 		bool *visited;
+		vector<int> *edges;
 
-		// Bfs
-		void printBfs(int start, vector<int> adj[]){
+		// BFS
+		void printBfs(int start){
 		    queue<int> pendingNodes;
 		    pendingNodes.push(start);
 		    visited[start] = true;
@@ -79,7 +80,7 @@ ALGORITHMS :-
 		        int front = pendingNodes.front();
 		        pendingNodes.pop();
 		        cout<<front<<' ';
-		        for(auto i : adj[front]){
+		        for(auto i : edges[front]){
 		            if(!visited[i]){
 		                visited[i] = true;
 		                pendingNodes.push(i);
@@ -87,39 +88,41 @@ ALGORITHMS :-
 		        }
 		    }
 		}
-		// Dfs
-		void printDfs(int start, vector<int> adj[]){
+		// DFS
+		void printDfs(int start){
 		    cout<<start<<' ';
 		    visited[start] = true;
-		    for(auto i : adj[start])
+		    for(auto i : edges[start])
 		        if(!visited[i])
-		            printDfs(i, adj);
+		            printDfs(i);
 		}
 		// Main code
 		int main() {
 			// number of vertices and edges
 		    cin >> V >> E;
-			
+
 			// Adjacency matrix
-		    vector<int> adj[V];
+		    edges = new vector<int>[V];
 		    for(int i = 0; i<E; i++){
-		        int x, y;
-		        cin>>x>>y;
-		        adj[x].push_back(y);
-		        adj[y].push_back(x);
+		        int v1, v2;
+		        cin>>v1>>v2;
+		        edges[v1].push_back(v2);
+		        edges[v2].push_back(v1);
 		    }
-		    
+
 		    // Flags for visited nodes
 		    visited = new bool[V]();
 		    
 		    // Inside for loop to handle disconnected graphs
 		    for(int i = 0; i<V; i++)
 		    	if(!visited[i])
-		        	printBfs(i, adj); or printDfs(i, adj);    
+		        	printBfs(i);    
 		    
 		    delete [] visited;
+		    delete [] edges;
 		  	return 0;
 		}
+
 		
 		
 	-2.) Kruskals ALGORITHM: ( To calculate MST of a given graph )
