@@ -63,7 +63,7 @@ ALGORITHIMS :-
 		
 		int start = 0, end = vmax;
 		while(start <= end){
-			int mid = start + (end-start)/2;
+			int mid = (start + end)/2;
 			if(check(mid) == true){
 				ans = mid;
 				start = mid+1;
