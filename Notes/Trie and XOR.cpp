@@ -64,6 +64,11 @@ Intution - When reducing the complexity by factor log(n) and someting may be don
             for(int i = 0; i<6; i++){
                 insert(arr[i], head);
             }
-            cout<<findMaxXorPair(6, head, arr);
+            int ans = INT_MIN;
+            for(int i = 0; i<n; i++){
+                int temp = findMaxXor(head, arr[i]);
+                ans = (temp>ans)?temp:ans;
+            }
+            cout<<ans;
             return 0;
         }
