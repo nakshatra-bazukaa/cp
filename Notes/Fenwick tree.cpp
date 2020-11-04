@@ -17,17 +17,18 @@ To go to the parent node of a node?
         parentIndex = childIndex - (childIndex & (-childIndex))
 
 -------------------------------------------------------------------------------------------------
+int n, *arr, *BIT;
 
 CODE: 
     Update function
-    void update(int index, int value, int *BIT, int n){
+    void update(int index, int value){
         for(; index <= n; index += index&(-index))
             BIT[index] += value;
     }
 
 CODE:
     Query function
-    int query(int index, int *BIT){
+    int query(int index){
         int sum = 0;
         for(; index > 0; index -= index&(-index))
             sum += BIT[index];
@@ -36,17 +37,17 @@ CODE:
 
 MAIN:
     int main(){
-        int n;
         cin>>n;
         
-        int *arr = new int[n+1]();
-        int *BIT = new int[n+1]();
+        arr = new int[n+1]();
+        BIT = new int[n+1]();
 
         for(int i = 1; i<n; i++){
             cin>>arr[i];
-            update(i, arr[i], BIT, n);
+            update(i, arr[i]);
         }
 
-        cout<<"Sum of first k elements "<< query(k, BIT)<<endl;
-        cout<<"Sum of elements from l to r indexs"<<query(r, BIT)-query(l-1, BIT)<<endl;
+        // Example output
+        cout<<"Sum of first k elements "<< query(k)<<endl;
+        cout<<"Sum of elements from l to r indexs"<<query(r)-query(l-1, BIT)<<endl;
     }

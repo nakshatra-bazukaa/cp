@@ -62,7 +62,7 @@ Other Operators:-
 Functions:-
 
 bool checkIthBitIsSet(int n, int i){
-	return ((n & 1<<i) == 0) ? false : true;
+	return (n & 1<<i);
 }
 int turnOnIthBit(int n, int i){
 	return n|1<<i;
@@ -80,32 +80,28 @@ int turnOffFirstSetBit(int n, int i){
 	return n & (n-1);
 }
 bool isEven(int n){
-	return ((n & 1) == 0) ? true : false;
+	return !(n & 1);
 }
 bool isPowerOfTwo (ll x){ 
-    bool ans = x && (!(x&(x-1))); /* First x in the expression is for the case when x is 0 */
-    return ans;  
+    return (x && (!(x&(x-1)))) /* First x in the expression is for the case when x is 0 */  
 }
 int removeAllSetBitsFromLSBToI(int n, int i){
-	int mask = 1<<(i+1);
-	mask--;
-	mask = ~mask;
-	return n & mask;
+	return n & (~(1<<(i+1) - 1));
 }
 int removeAllSetBitsFromMSBToI(int n, int i){
-	int mask = 1<<i;
-	mask--;
-	return n & mask;
+	return (n & (1<<i - 1));
 }
 
-O(log(n))
-int countSetBits2(int n){
-    int c = 0;
-    while(n>0){
-        c++;
-        n = n & (n-1);
+// Most optimised
+O(no. of set bits in n) Average case 
+O(logN) Worst case 
+int countSetBits(int n){
+    int count = 0;
+    while(n){
+        count++;
+        n &= (n-1);
     }
-    return c;
+    return count;
 }
 
 1.)  Counting Number Of Set Bits
@@ -115,13 +111,14 @@ int countSetBits2(int n){
             N = 11(1101) : output = 3
 
         Approach 1:
+		O(log(n))
         int countSetBits1(int n){
-            int c = 0;
+            int count = 0;
             while(n){
-                if(n&1 == 1) c++;
-                n = n>>1;
+                if(n&1 == 1) count++;
+                n >>= 1;
             }
-            return c;
+            return count;
         }
 
         O(logN)
@@ -130,12 +127,12 @@ int countSetBits2(int n){
         Imp. explanation 
         // link(https://www.youtube.com/watch?v=_o7QBzM33J0&list=PL2q4fbVm1Ik7ip1VkWwe5U_CEb93vw6Iu&index=4) 7:30 min
         int countSetBits2(int n){
-            int c = 0;
-            while(n>0){
-                c++;
-                n = n & (n-1);
+            int count = 0;
+            while(n){
+                count++;
+                n &= (n-1);
             }
-            return c;
+            return count;
         }
 
         O(no. of set bits) Average case 
