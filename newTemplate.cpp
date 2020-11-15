@@ -41,6 +41,7 @@ using namespace std;
 #define lcm(a,b) (a/(__gcd(a,b)))*b
 bool prime[1000001];
 void sieve(){
+    memset(prime, true, sizeof(prime));
     prime[0] = prime[1] = false;
     for(ll i=2; i*i <= 1000000; i++)
         if(prime[i])
@@ -97,7 +98,6 @@ void solve(int t){
 }
 int main(){
 	// c_p_p();
-    // memset(prime, true, sizeof(prime));
     // sieve();
     IO
     int t = 1;
