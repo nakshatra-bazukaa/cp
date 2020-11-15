@@ -46,12 +46,11 @@
 
     // Sieve of eratosthenes
 
-    // O(n)
+    // O(nlog(log(n)))
 
     bool prime[1000001];
     void sieve(){
-        prime[0] = false;
-        prime[1] = false;
+        prime[0] = prime[1] = false;
         for(int i = 2; i*i<1000001; i++){
             if(prime[i])
                 for(int j = i*i; j<1000001; j += i)
