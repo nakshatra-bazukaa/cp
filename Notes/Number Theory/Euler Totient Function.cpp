@@ -30,4 +30,19 @@
 
 // Code :
 
-    
+    // O(n*log(log(n)))
+    int phi[1000001];
+    void phiSieve(){
+        for(int i = 1; i<1000001; i++)
+            phi[i] = i;
+        for(int i = 2; i<1000001; i++)
+            if(phi[i] == i){
+                phi[i] = i-1;
+                for(int j = 2*i; j<1000001; j += i)
+                    phi[j] = (phi[j]*(i-1))/i;
+            }
+    }
+    int main(){
+        phiSieve();
+    }
+
