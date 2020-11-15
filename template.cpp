@@ -2,6 +2,7 @@
 using namespace std;
 #define IO ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 #define ll long long
+#define in(n) ll n; cin>>n;
 #define loop(n) for(ll i = 0; i < n; ++i)
 #define ff(i,j,n,m) for(ll i = 0; i < n; ++i) for(ll j = 0; j < m; ++j)
 #define f(i,s,e) for(ll i = s; i < e; ++i)
@@ -40,9 +41,9 @@ using namespace std;
 #define lcm(a,b) (a/(__gcd(a,b)))*b
 bool prime[1000001];
 void sieve(){
-    prime[0] = false; prime[1] = false;
+    prime[0] = prime[1] = false;
     for(ll i=2; i*i <= 1000000; i++)
-        if(prime[i] == true)
+        if(prime[i])
             for(ll j = i*i; j <= 1000000; j += i)
                 prime[j] = false;
 }
@@ -67,17 +68,23 @@ void printDivisors(ll n){
             (n/i == i) ? (cout<<i<<endl) : (cout<<i<<' '<<n/i<<endl); 
 } 
 void printPrimeFactors(ll n){
-    while(n%2 == 0){
-        cout<<2<<endl;
-        n /= 2;
+    // O(n*log(log(n))) {Smallest Prime Factor Corrosponding to n}
+    int spf[n+1]; 
+    spf[1] = 1; 
+    for(int i=2; i<=n; i++) 
+        spf[i] = i; 
+    for(int i=4; i<=n; i+=2) 
+        spf[i] = 2; 
+    for(int i=3; i*i<=n; i++)  
+        if(spf[i] == i)  
+            for(int j=i*i; j<=n; j+=i) 
+                if(spf[j]==j) 
+                    spf[j] = i;
+    // O(log(n))
+    while(n != 1) { 
+        cout<<spf[n]<<endl; 
+        n /= spf[n]; 
     }
-    for(ll i = 3; i <= sqrt(n); i += 2)
-        while(n%i == 0){
-            cout<<i<<endl;
-            n /= i;
-        }
-    if(n > 2)
-        cout<<n<<endl;
 }
 void c_p_p(){
     #ifndef ONLINE_JUDGE
@@ -86,8 +93,7 @@ void c_p_p(){
     #endif
 }
 void solve(int t){
-    int n;
-    // cin>>n;
+    // in(n)
 }
 int main(){
 	// c_p_p();
@@ -95,7 +101,7 @@ int main(){
     // sieve();
     IO
     int t = 1;
-    // cin>>t;
+    // in(t)
     fin(i, 1, t) solve(i);
     return 0;
 }
