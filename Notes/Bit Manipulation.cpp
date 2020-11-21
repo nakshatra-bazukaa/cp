@@ -76,7 +76,7 @@ int flipIthBit(int n, int i){
 int returnIdxOfFirstSetBit(int n){
     return log2(n & -n) + 1;
 }
-int turnOffFirstSetBit(int n, int i){
+int turnOffFirstSetBit(int n){
 	return n & (n-1);
 }
 bool isEven(int n){
