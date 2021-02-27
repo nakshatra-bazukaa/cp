@@ -1,8 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
 #define IO ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 #define ll long long
 #define in(n) ll n; cin>>n;
+#define inS(n) string n; cin>>n;
+#define inArr(arr, n) vl arr(n); f(i, 0, n) cin>>arr[i];
 #define loop(n) for(ll i = 0; i < n; ++i)
 #define ff(i,j,n,m) for(ll i = 0; i < n; ++i) for(ll j = 0; j < m; ++j)
 #define f(i,s,e) for(ll i = s; i < e; ++i)
@@ -68,7 +74,7 @@ void printDivisors(ll n){
         if (n%i == 0)  
             (n/i == i) ? (cout<<i<<endl) : (cout<<i<<' '<<n/i<<endl); 
 } 
-void printPrimeFactors(ll n){
+void printPrimeFactors(int n){
     // O(n*log(log(n))) {Smallest Prime Factor Corrosponding to n}
     int spf[n+1]; 
     spf[1] = 1; 
@@ -85,16 +91,16 @@ void printPrimeFactors(ll n){
     while(n != 1) { 
         cout<<spf[n]<<endl; 
         n /= spf[n]; 
-    }
+    }  
 }
 void c_p_p(){
     #ifndef ONLINE_JUDGE
     freopen("i.txt", "r", stdin);
-    freopen("o.txt", "w", stdout);
+    freopen("output.txt", "w", stdout);
     #endif
 }
 void solve(int t){
-    // in(n)
+    in(n)
 }
 int main(){
 	// c_p_p();
