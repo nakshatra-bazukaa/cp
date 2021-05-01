@@ -315,3 +315,19 @@ ALGORITHMS :-
 				    
 				  	return 0;
 				}
+
+
+Tips:
+	1.) For weighted graphs:
+	
+		class Edge {
+			public:
+				int v;
+				int d;
+				Edge(int v, int d){
+					this->v = v;
+					this->d = d;
+				}
+		};
+
+		vector<Edge> edges[100001];
