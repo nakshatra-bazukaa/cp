@@ -266,55 +266,131 @@ ALGORITHMS :-
  					-------------	   ------      -----------
 		
 			CODE:
-				int V, E;
-				bool *visited;
-				int *dist;
-
-				int findMinVertex(){
-				    int minVertex = -1;
-				    for(int i = 0; i<V; i++)
-				        if(!visited[i] && (minVertex == -1 || dist[i] < dist[minVertex]))
-				            minVertex = i;
-				    return minVertex;
-				}
-				void dijkstras(vector<pair<int,int>> adj[]){
-				    for(int i = 0; i<V; i++){
-				        int minVertex = findMinVertex();
-				        visited[minVertex] = true;
-				        for(auto j : adj[minVertex])
-				            if(!visited[j.first] && j.second > 0){
-				                int totalDist = dist[minVertex] + j.second;
-				                if(dist[j.first] > totalDist)
-				                    dist[j.first] = totalDist;
-				            }
-				    }
-				}
-				int main(){
-				  	cin>>V>>E;
-
-				    vector<pair<int,int>> adj[V];
-				    for(int i = 0; i<E; i++){
-				        int v1, v2, w;
-				        cin>>v1>>v2>>w;
-				        adj[v1].push_back(make_pair(v2, w));
-				        adj[v2].push_back(make_pair(v1, w));
-				    }
-				    
-				    visited = new bool[V]();
-				    dist = new int[V]();
-				    for(int i = 1; i<V; i++)
-				        dist[i] = INT_MAX;
-				        
-				    dijkstras(adj);
-				    
-				    for(int i = 0; i<V; i++)
-				        cout<<i<<' '<<dist[i]<<endl;
+				1.) O(V*E)
 					
-				    delete [] visited;
-				    delete [] dist;
-				    
-				  	return 0;
-				}
+					#include<bits/stdc++.h>
+					using namespace std;
+
+					#define IO ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+					#define ll long long
+					#define in(n) ll n; cin>>n;
+					#define inS(n) string n; cin>>n;
+					#define inArr(arr, n) vl arr(n); f(i, 0, n) cin>>arr[i];
+					#define pb push_back
+					#define F first
+					#define S second
+					#define endl "\n"
+					#define mod 1000000007
+					#define f(i, s, e) for(int i = s; i<=e; i++)
+
+
+					// Global arrays and variables
+					ll V, E;
+					vector<pair<ll, ll>> edges[100001]; // {F->edge, S->dist between two edges}
+					bool vis[100001];
+					ll dist[100001];
+
+					// Finding the vertex with min distance which is still unvisited
+					ll findMinDistVert(){ // O(V)
+						ll vert_with_min_dist = -1;
+						f(i, 1, V)
+							if(!vis[i] && (vert_with_min_dist == -1 || dist[i] < dist[vert_with_min_dist]))
+								vert_with_min_dist = i;
+						return vert_with_min_dist;
+					}
+					void dijkstras(){
+						fill(dist, dist+100001, 1000000000LL*E + 1LL); // Filling dist array with infinity initially
+						dist[1] = 0;
+
+						// Running loop for V times
+						f(i, 1, V){//O(V)
+							ll vert_with_min_dist = findMinDistVert(); // O(V)
+							vis[vert_with_min_dist] = true;
+							for(auto edge : edges[vert_with_min_dist]) //O(E)
+								dist[edge.F] = min(dist[edge.F], dist[vert_with_min_dist] + edge.S);
+						}
+					}
+					void solve(int t){
+						cin>>V>>E;
+						f(i, 1, E){
+							in(vert1) in(vert2) in(dist)
+							edges[vert1].pb({vert2, dist});
+						}
+
+						dijkstras();
+
+						f(i, 1, V)
+							cout<<dist[i]<<' ';
+					}
+					int main() {
+						IO
+					    int t = 1;
+					    // in(t)
+					    f(i, 1, t) solve(i);
+						return 0;
+					}
+				2.) O(E*log(V))
+					#include<bits/stdc++.h>
+					using namespace std;
+
+					#define IO ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+					#define ll long long
+					#define in(n) ll n; cin>>n;
+					#define inS(n) string n; cin>>n;
+					#define inArr(arr, n) vl arr(n); f(i, 0, n) cin>>arr[i];
+					#define pb push_back
+					#define F first
+					#define S second
+					#define endl "\n"
+					#define mod 1000000007
+					#define f(i, s, e) for(int i = s; i<=e; i++)
+
+					ll V, E;
+					vector<pair<ll, ll>> edges[100001]; // {F->edge, S->dist between two edges}
+					bool vis[100001];
+					ll dist[100001];
+					priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> minDistVertpq; //minimum priority queue with {F->distance from source, S->Node}
+
+					void dijkstras(){
+						fill(dist, dist+100001, 1000000000LL*E + 1LL); // Filling dist array with infinity initially
+						dist[1] = 0;
+						minDistVertpq.push({0, 1}); // Because distance from source to source is 0
+
+						while(!minDistVertpq.empty()){
+							auto minDistVert = minDistVertpq.top(); // O(log(V))
+							minDistVertpq.pop();
+							ll vert = minDistVert.S; 
+							if(vis[vert])
+								continue;
+							vis[vert] = true;
+							for(auto edge : edges[vert]){
+								if(dist[edge.F] > dist[vert] + edge.S){
+									dist[edge.F] = dist[vert] + edge.S;
+									minDistVertpq.push({dist[edge.F], edge.F}); // O(log(V))
+								}
+							}
+						}
+					}
+					void solve(int t){
+						cin>>V>>E;
+						f(i, 1, E){ 
+							in(vert1) in(vert2) in(dist)
+							edges[vert1].pb({vert2, dist});
+						}
+
+						dijkstras(); 
+
+						f(i, 1, V)
+							cout<<dist[i]<<' ';
+					}
+					int main() {
+						IO
+					    int t = 1;
+					    // in(t)
+					    f(i, 1, t) solve(i);
+						return 0;
+					}
+				
 
 
 Tips:
